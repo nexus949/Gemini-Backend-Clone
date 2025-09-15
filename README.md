@@ -120,9 +120,13 @@ Below are all the valid endpoints and can be easily hit using the correct HTTP m
 | /v1/webhook/stripe           | POST   | ❌ (Stripe<br>only) | Handles Stripe webhook events (e.g.,<br>payment success/failure).           |
 | /v1/subscription/status      | GET    | ✅                  | Checks the user's current subscription tier<br>(Basic or Pro).              |
 
+---
+
 ### 💸 Stripe integration screenshot
 
 [![Stripe-Integration.png](https://i.postimg.cc/Y2v6rFRF/Stripe-Integration.png)](https://postimg.cc/F1QdG72F)
+
+---
 
 ### 👨🏼‍💻 Gemini API Integration Overview
 
