@@ -2,6 +2,7 @@ import userModel from "../../models/user.model.js";
 import { verifyPassword } from "../../utils/hashPass.js";
 import { genOTP } from "../../utils/otpGen.js";
 import { generateJWT } from "../../middlewares/auth.js";
+import { cacheUser } from "../../utils/cache.js";
 
 export async function sendOTP(req, res) {
     try {
@@ -54,6 +55,13 @@ export async function verifyOTP(req, res) {
         user.otp = null;
         user.otpExpiresAt = null;
         await user.save();
+
+        cacheUser.set("_user", {
+            id: user.dataValues.id,
+            phone: user.dataValues.phone,
+            name: user.dataValues.name,
+            subscription_tier: user.dataValues.subscriptionTier
+        })
 
         //if everything is fine, create a payload and generate a JWT
         const payload = {

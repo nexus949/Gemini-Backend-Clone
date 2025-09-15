@@ -1,9 +1,11 @@
 import chatModel from "../../models/chatrooms.model.js";
 import { GeminiRequestQueue } from "../../utils/queue.js";
-import { roomCache } from "../../utils/cache.js";
+import { roomCache, cacheUser } from "../../utils/cache.js";
 import shortUUID from "short-uuid";
 import { db } from "../../../../config/config.js";
+import { rateLimiter } from "../../utils/rate-limit.js";
 import messageModel from "../../models/messages.model.js";
+import userModel from "../../models/user.model.js";
 
 export async function createChatRoom(req, res) {
     try {
@@ -27,12 +29,35 @@ export async function createChatRoom(req, res) {
 
 export async function sendMessage(req, res) {
     try {
+        //get user id from req.user
+        const user_id = req.user.sub;
+
         //get chatroom id from request parameters
         const id = req.params.id;
         //get json prompt from request body
         const userPrompt = req.body.userPrompt;
         if (!userPrompt)
             return res.status(400).json({ message: "Prompt to AI is required !" });
+
+        //get user from cache if not query and set in cache for rate limiting
+        let user = cacheUser.get("_user");
+        if (!user) {
+            user = await userModel.findOne({
+                where: { id: user_id }
+            });
+            cacheUser.set("_user", {
+                id: user.dataValues.id,
+                phone: user.dataValues.phone,
+                name: user.dataValues.name,
+                subscription_tier: user.dataValues.subscriptionTier
+            })
+        }
+
+        //rate limit user
+        const rateLimitResult = await rateLimiter(user);
+        if(!rateLimitResult){
+            return res.status(429).json({ error: "Daily limit reached for Basic tier" });
+        }
 
         //add the task to queue
         const result = await GeminiRequestQueue.add("geminiCall", { userPrompt, id });
@@ -139,8 +164,8 @@ export async function getLatestMessage(req, res) {
     }
 }
 
-export async function getAllMessages(req, res){
-    try{
+export async function getAllMessages(req, res) {
+    try {
         //get chatroom id from request parameters
         const id = req.params.id;
 
@@ -154,7 +179,7 @@ export async function getAllMessages(req, res){
             "All Messages": allMessages
         })
     }
-    catch(error){
+    catch (error) {
         console.log("Server Error: ", error);
         res.status(500).json({ message: "Internal Server Error ! 🤕" });
     }

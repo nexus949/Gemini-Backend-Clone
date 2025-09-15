@@ -46,5 +46,7 @@ export const config = {
     STRIPE_WEBHOOK_SIGNING_SECRET: process.env.STRIPE_WEBHOOK_SIGNING_SECRET,
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     UPSTASH_URL: process.env.UPSTASH_URL,
+    UPSTASH_URL_HTTP: process.env.UPSTASH_URL_HTTP,
+    UPSTASH_URL_TOKEN: process.env.UPSTASH_URL_TOKEN
 
 };
