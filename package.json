@@ -1,0 +1,30 @@
+{
+  "name": "gemini-backend-clone",
+  "version": "1.0.0",
+  "description": "Gemini Backend Clone Assignment for Kuvaka Tech",
+  "main": "./src/v1/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"nodemon ./src/v1/server.js\" \"node ./src/v1/utils/worker.js\""
+  },
+  "author": "Aritra",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@upstash/redis": "^1.35.3",
+    "argon2": "^0.44.0",
+    "bullmq": "^5.58.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cache": "^5.1.2",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.7",
+    "short-uuid": "^5.2.0",
+    "stripe": "^18.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
