@@ -86,6 +86,8 @@ Server Runs on PORT 3000 by default ! Postman can be used to hit endpoints.
 - Cloud based PostgreSQL has been used  alongside cloud based Redis server.
 - As required by the assignment, A message queue has been implemented to handle Gemini request asynchronously.
 - JWT is always sent as bearer token and expires within 20 minutes of creation.
+- Gemini is contextless i.e. does not persists context between responses. I avoided context due to added complexity.
+- An idea to handle context is a sliding window where messages within a window are passed and it moves per request and response.
 
 ### 🔨 Key Services Used
 
